@@ -91,6 +91,11 @@ REST_FRAMEWORK = {
         'rest_framework.filters.SearchFilter',
 
     ],
+     'DEFAULT_AUTHENTICATION_CLASSES': [
+
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+
+    ],
 
     'PAGE_SIZE': 10,
 
@@ -121,6 +126,8 @@ LOGGING = {
     },
 
 }
+
+AUTH_USER_MODEL = 'core.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
