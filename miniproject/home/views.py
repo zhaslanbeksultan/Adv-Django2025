@@ -1,6 +1,9 @@
+from django.contrib import auth
 from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework import status, generics, permissions, viewsets
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from users.serializers import RegisterSerializer, LoginSerializer, LogoutSerializer
 from django.contrib.auth import login
 
@@ -27,11 +30,37 @@ class LoginAPIView(generics.GenericAPIView):
     def get(self, request):
         return render(request, 'mysite/login.html')
 
-    def post(self,request):
+    def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        return Response(serializer.data,status=status.HTTP_200_OK)
-        # return redirect('home')
+        user = auth.authenticate(username=serializer.validated_data['username'],
+                                 password=serializer.validated_data['password'])
+        if user:
+            auth.login(request, user)  # Useful for checking `user.is_authenticated` in templates
+
+            # Generate tokens
+            refresh = RefreshToken.for_user(user)
+            access = refresh.access_token
+
+            # Set tokens as HttpOnly cookies
+            response = redirect('home')
+            response.set_cookie(
+                key='access_token',
+                value=str(access),
+                httponly=True,
+                secure=True,  # Set to True in production (requires HTTPS)
+                samesite='Lax'
+            )
+            response.set_cookie(
+                key='refresh_token',
+                value=str(refresh),
+                httponly=True,
+                secure=True,
+                samesite='Lax'
+            )
+            return response
+        else:
+            return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
 class LogoutAPIView(generics.GenericAPIView):
     serializer_class = LogoutSerializer
     permission_classes = (permissions.IsAuthenticated,)

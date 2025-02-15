@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile PDF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        ul {
+            list-style-type: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>User Profile</h1>
+
+    <div>
+        <!-- Display Profile Picture -->
+        {% if user.profile_picture %}
+            <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-pic">
+
+        {% endif %}
+    </div>
+
+    <!-- Display User Information -->
+    <ul>
+        <li><strong>Username:</strong> {{ user.username }}</li>
+        <li><strong>Email:</strong> {{ user.email }}</li>
+        <li><strong>Role:</strong> {{ user.get_role_display }}</li>
+    </ul>
+</body>
+</html>

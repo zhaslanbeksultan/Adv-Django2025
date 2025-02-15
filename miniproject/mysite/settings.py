@@ -54,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'mysite.middleware.JWTAuthMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -114,6 +115,15 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+PDFKIT_OPTIONS = {
+    'page-size': 'A4',
+    'encoding': 'UTF-8',
+}
+
+# Set the path for wkhtmltopdf
+PDFKIT_CONFIG = {
+    'windows': r'E:\\wkhtmltox\\bin\\wkhtmltopdf.exe',  # For Windows
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -150,7 +160,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-# STATICFILES_DIRS = [BASE_DIR / 'static']
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
