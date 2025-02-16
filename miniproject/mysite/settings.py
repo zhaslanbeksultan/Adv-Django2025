@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'sales',
     'trading',
     'users',
+    'django_filters',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -90,7 +92,9 @@ DATABASES = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.BasicAuthentication',  # For Basic Auth
+        'rest_framework.authentication.TokenAuthentication',   # For Token Auth
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # For JWT Auth
     )
 }
 
@@ -161,7 +165,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
