@@ -1,26 +1,30 @@
-from rest_framework import generics
+from django.shortcuts import render, get_object_or_404
+from cart.forms import CartAddProductForm
 from .models import Category, Product
-from .serializers import CategorySerializer, ProductSerializer
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
 
-class CategoryListCreateView(generics.ListCreateAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
 
-class CategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+def product_list(request, category_slug=None):
+    category = None
+    categories = Category.objects.all()
+    products = Product.objects.filter(available=True)
+    if category_slug:
+        category = get_object_or_404(Category, slug=category_slug)
+        products = products.filter(category=category)
+    return render(request,
+                  'products/product/list.html',
+                  {'category': category,
+                   'categories': categories,
+                   'products': products})
 
-class ProductListCreateView(generics.ListCreateAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['category', 'is_active']
-    search_fields = ['name', 'tags']
-    ordering_fields = ['created_at', 'price']
 
-class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+def product_detail(request, id, slug):
+    product = get_object_or_404(Product,
+                                id=id,
+                                slug=slug,
+                                available=True)
+    cart_product_form = CartAddProductForm()
+    return render(request,
+                  'products/product/detail.html',
+                  {'product': product,
+                   'cart_product_form': cart_product_form})
 

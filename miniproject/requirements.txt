@@ -5,7 +5,8 @@ drf-yasg
 celery
 redis
 psycopg2-binary
-pillow
 pdfkit
 django-weasyprint
 channels
+flower
+stripe

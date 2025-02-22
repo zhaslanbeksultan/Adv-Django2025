@@ -1,11 +1,8 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import OrderViewSet, TransactionViewSet
+from django.urls import path
+from . import views
 
-router = DefaultRouter()
-router.register(r'orders', OrderViewSet, basename='order')
-router.register(r'transactions', TransactionViewSet, basename='transaction')
+app_name = 'trading'
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('create/', views.order_create, name='order_create'),
 ]

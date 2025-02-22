@@ -2,21 +2,20 @@ from celery import shared_task
 from django.core.mail import send_mail
 from .models import Order
 
-@shared_task
-def execute_orders():
-    pending_orders = Order.objects.filter(status='PENDING')
-    for order in pending_orders:
-        try:
-            order.execute()
-        except ValueError:
-            pass
 
 @shared_task
-def send_trade_notification(user_email, message):
-    send_mail(
-        'Trade Executed',
-        message,
-        'zhaslanbeksultan@gmail.com',
-        [user_email],
-        fail_silently=False,
-    )
+def order_created(order_id):
+    """
+    Task to send an e-mail notification when an order is
+    successfully created.
+    """
+    order = Order.objects.get(id=order_id)
+    subject = f'Order nr. {order.id}'
+    message = f'Dear {order.first_name},\n\n' \
+              f'You have successfully placed an order.' \
+              f'Your order ID is {order.id}.'
+    mail_sent = send_mail(subject,
+                          message,
+                          'zhaslanbeksultan@gmail.com',
+                          [order.email])
+    return mail_sent

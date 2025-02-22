@@ -39,11 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
-    'analytics',
-    'products',
-    'sales',
-    'trading',
-    'users',
+    'products.apps.ProductsConfig',
+    'sales.apps.SalesConfig',
+    'trading.apps.TradingConfig',
+    'users.apps.UsersConfig',
+    'cart.apps.CartConfig',
     'django_filters',
     'drf_yasg',
 ]
@@ -56,7 +56,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'mysite.middleware.JWTAuthMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -72,6 +71,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'cart.context_processors.cart',
             ],
         },
     },
@@ -92,8 +92,8 @@ DATABASES = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',  # For Basic Auth
-        'rest_framework.authentication.TokenAuthentication',   # For Token Auth
+        # 'rest_framework.authentication.BasicAuthentication',  # For Basic Auth
+        # 'rest_framework.authentication.TokenAuthentication',   # For Token Auth
         'rest_framework_simplejwt.authentication.JWTAuthentication',  # For JWT Auth
     )
 }
@@ -108,8 +108,9 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1),
 }
 
+CART_SESSION_ID = 'cart'
 # Redirect after login
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'products'
 
 # Redirect after logout
 LOGOUT_REDIRECT_URL = 'login'
@@ -128,6 +129,15 @@ PDFKIT_OPTIONS = {
 PDFKIT_CONFIG = {
     'windows': r'E:\\wkhtmltox\\bin\\wkhtmltopdf.exe',  # For Windows
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+
+# Настроечные параметры Stripe
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51QvKFMJwx00zYYRSfPoMAf4cGecVKzyzwBq5TWJfSnjFL0qUxCU7Ovf0e2k9OBycbDRgQJtzeCMWkSgjEj09S2u200IgEcLsJ7' # Публикуемый ключ
+STRIPE_SECRET_KEY = 'sk_test_51QvKFMJwx00zYYRS9MAHrN8zbQybflPvij9BAM1c1oCe5AoiI8QfRBbbgxm1htgfkO9ZcE5nbYhheTW7HLBosHGt00u3hxLWMq' # Секретный ключ
+STRIPE_API_VERSION = '2022-08-01'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

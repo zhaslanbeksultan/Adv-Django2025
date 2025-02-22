@@ -10,7 +10,7 @@ class User(AbstractUser):
         ('sales', 'Sales Representative'),
         ('customer', 'Customer'),
     ]
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='customer')
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='admin')
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
     class Meta:
         # add this meta class to avoid clashes with the default User model
