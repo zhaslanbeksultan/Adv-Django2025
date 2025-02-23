@@ -63,7 +63,7 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'mysite/templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -138,7 +138,7 @@ CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 STRIPE_PUBLISHABLE_KEY = 'pk_test_51QvKFMJwx00zYYRSfPoMAf4cGecVKzyzwBq5TWJfSnjFL0qUxCU7Ovf0e2k9OBycbDRgQJtzeCMWkSgjEj09S2u200IgEcLsJ7' # Публикуемый ключ
 STRIPE_SECRET_KEY = 'sk_test_51QvKFMJwx00zYYRS9MAHrN8zbQybflPvij9BAM1c1oCe5AoiI8QfRBbbgxm1htgfkO9ZcE5nbYhheTW7HLBosHGt00u3hxLWMq' # Секретный ключ
 STRIPE_API_VERSION = '2022-08-01'
-
+STRIPE_WEBHOOK_SECRET = 'whsec_8019a4d68b1607f37826c1df1e395952d73c6d989974d0d96ea7329036598c88'
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -174,8 +174,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+# STATICFILES_DIRS = [BASE_DIR / 'static']
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
+# STATICFILES_DIRS = [BASE_DIR / 'staticfiles']
+STATIC_ROOT = BASE_DIR / 'static'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
