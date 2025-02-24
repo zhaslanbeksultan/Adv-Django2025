@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'trading.apps.TradingConfig',
     'users.apps.UsersConfig',
     'cart.apps.CartConfig',
+    'coupons.apps.CouponsConfig',
     'django_filters',
     'drf_yasg',
 ]
