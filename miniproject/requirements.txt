@@ -10,3 +10,5 @@ channels
 flower
 stripe
 weasyprint
+pillow
+django-filter

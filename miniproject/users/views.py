@@ -1,18 +1,31 @@
+import base64
+import logging
+
 import pdfkit
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.template.loader import render_to_string
+from django.template.loader import render_to_string, get_template
 from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework import status, generics, permissions, viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from users.serializers import RegisterSerializer, LoginSerializer, LogoutSerializer
+from rest_framework.views import APIView
+from weasyprint import HTML
+
+from users.forms import ProfileForm
+from users.models import Profile
+from users.serializers import RegisterSerializer, LoginSerializer, LogoutSerializer, ProfileSerializer
+
 
 def home_page(request):
-    return render(request, 'mysite/home.html')
+    return render(request, 'users/home.html')
 class RegisterView(generics.GenericAPIView):
     serializer_class = RegisterSerializer
 
     def get(self, request):
-        return render(request, 'mysite/register.html')
+        return render(request, 'users/register.html')
 
     def post(self,request):
         user=request.data
@@ -31,39 +44,8 @@ class LoginAPIView(generics.GenericAPIView):
         return Response(serializer.data,status=status.HTTP_200_OK)
 
     def get(self, request):
-        return render(request, 'mysite/login.html')
-    #
-    # def post(self, request):
-    #     serializer = self.serializer_class(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     user = auth.authenticate(username=serializer.validated_data['username'],
-    #                              password=serializer.validated_data['password'])
-    #     if user:
-    #         auth.login(request, user)  # Useful for checking `user.is_authenticated` in templates
-    #
-    #         # Generate tokens
-    #         refresh = RefreshToken.for_user(user)
-    #         access = refresh.access_token
-    #
-    #         # Set tokens as HttpOnly cookies
-    #         response = redirect('home')
-    #         response.set_cookie(
-    #             key='access_token',
-    #             value=str(access),
-    #             httponly=True,
-    #             secure=True,  # Set to True in production (requires HTTPS)
-    #             samesite='Lax'
-    #         )
-    #         response.set_cookie(
-    #             key='refresh_token',
-    #             value=str(refresh),
-    #             httponly=True,
-    #             secure=True,
-    #             samesite='Lax'
-    #         )
-    #         return response
-    #     else:
-    #         return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+        return render(request, 'users/login.html')
+
 class LogoutAPIView(generics.GenericAPIView):
     serializer_class = LogoutSerializer
     permission_classes = (permissions.IsAuthenticated,)
@@ -72,25 +54,48 @@ class LogoutAPIView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
-        # return redirect('login')
 
-def profile_view(request):
-    if request.user.is_authenticated:
-        return render(request, 'mysite/profile.html', {'user': request.user})
+@login_required(login_url='/users/login/')
+def profile_detail(request):
+    profile = request.user.profile
+    return render(request, 'users/profile_detail.html', {'profile': profile})
+
+@login_required
+def profile_update(request):
+    profile = request.user.profile
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile-detail')
     else:
-        return redirect('login')
+        form = ProfileForm(instance=profile)
+    return render(request, 'users/profile_update.html', {'form': form})
 
-def profile_pdf_view(request):
-    # Render the HTML template with user data
-    html_content = render_to_string('mysite/profile_pdf.html', {'user': request.user})
+@login_required
+def profile_pdf(request):
+    profile = request.user.profile
 
-    # Define path to wkhtmltopdf
-    config = pdfkit.configuration(wkhtmltopdf='E:\\wkhtmltox\\bin\\wkhtmltopdf.exe')  # Adjust this for your OS
+    # Encode the profile picture as base64
+    if profile.profile_picture:
+        try:
+            with open(profile.profile_picture.path, "rb") as image_file:
+                profile.profile_picture_base64 = base64.b64encode(image_file.read()).decode('utf-8')
+        except Exception as e:
+            profile.profile_picture_base64 = None
+    else:
+        profile.profile_picture_base64 = None
 
-    # Convert HTML to PDF
-    pdf = pdfkit.from_string(html_content, False, configuration=config)
+    # Render the HTML template
+    html = render_to_string('users/profile_pdf.html', {'profile': profile})
+
+    # Generate PDF using WeasyPrint
+    try:
+        pdf = HTML(string=html).write_pdf()
+    except Exception as e:
+        raise
 
     # Return PDF as a response
     response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="profile.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="{profile.user.username}_profile.pdf"'
     return response

@@ -1,5 +1,8 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
+from rest_framework.decorators import api_view
+
 from products.models import Product
 from coupons.forms import CouponApplyForm
 from products.recommender import Recommender

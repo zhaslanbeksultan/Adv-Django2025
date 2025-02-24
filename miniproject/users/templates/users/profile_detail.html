@@ -1,0 +1,25 @@
+<!-- profile/templates/profile/profile_detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - {{ profile.user.username }}</title>
+</head>
+<body>
+    <h1>Profile Details</h1>
+    <p><strong>Username:</strong> {{ profile.user.username }}</p>
+    <p><strong>Email:</strong> {{ profile.user.email }}</p>
+    <p><strong>Role:</strong> {{ profile.user.role }}</p>
+    <p><strong>Bio:</strong> {{ profile.bio }}</p>
+    {% if profile.profile_picture %}
+        <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" width="200">
+    {% else %}
+        <p>No profile picture uploaded.</p>
+    {% endif %}
+    <br>
+    <a href="{% url 'profile-update' %}">Edit Profile</a>
+    <br>
+    <a href="{% url 'profile-pdf' %}">Download PDF</a>
+</body>
+</html>
