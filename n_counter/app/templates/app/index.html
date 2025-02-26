@@ -7,14 +7,27 @@
         <form method="POST">
             <div class="container">
                 <div class="row">
-                <div class="col-md-12">
-                    <nav class="navbar navbar-dark bg-primary">
-                        <span class="navbar-brand">Calorie Tracker</span>
-                        </nav>
+                    <div class="col-md-12">
+                        <nav class="navbar navbar-dark bg-primary">
+                            <span class="navbar-brand">Calorie Tracker</span>
+                            </nav>
+                    </div>
                 </div>
-            </div>
                 <br><br><br>
 
+                <a href="{% url 'add-food' %}" class="btn btn-primary">Add a New Food Item</a>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Your Health Goals</h4>
+                        {% if health_goal %}
+                            <p>Calories: {{ health_goal.daily_calorie_goal }} kcal | Carbs: {{ health_goal.carb_goal }} g | Proteins: {{ health_goal.protein_goal }} g | Fats: {{ health_goal.fat_goal }} g</p>
+                        {% else %}
+                            <p>No goals set yet. <a href="{% url 'set-goal' %}">Set your goals here</a>.</p>
+                        {% endif %}
+                        <a href="{% url 'set-goal' %}" class="btn btn-primary">Edit Goals</a>
+                    </div>
+                </div>
                 <h4>Calorie Goal</h4>
                 <br>
                 <div class="row">
@@ -44,104 +57,171 @@
                            </form>
                    </div>
                </div>
-	        </div>
-        </form>
-        <div class="row">
-            <div class="col-md-7">
-                <div >
-                    <h4> Today's Consumption</h4>
-                </div>
+                <div class="row">
+                    <div class="col-md-7">
+                        <div >
+                            <h4> Today's Consumption</h4>
+                        </div>
 
-                <table id="table" class="table table-striped table-primary">
-                    <tr class="bg-primary text-white">
-                        <th>Food item</th>
-                        <th>Carbs(gm)</th>
-                        <th>Protein(gm)</th>
-                        <th>Fats(gm)</th>
-                        <th>Calories(Kcal)</th>
+                        <table id="table" class="table table-striped table-primary">
+                            <tr class="bg-primary text-white">
+                                <th>Food item</th>
+                                <th>Carbs(gm)</th>
+                                <th>Protein(gm)</th>
+                                <th>Fats(gm)</th>
+                                <th>Calories(Kcal)</th>
 
-                    </tr>
-                            {% for c in consumed_food %}
+                            </tr>
+                                    {% for c in consumed_food %}
+                                    <tr>
+                                        <td>{{c.food_consumed.name}}</td>
+                                        <td>{{c.food_consumed.carbs}}</td>
+                                        <td>{{c.food_consumed.proteins}}</td>
+                                        <td>{{c.food_consumed.fats}}</td>
+                                        <td>{{c.food_consumed.calories}}</td>
+                                        <td><a class="btn btn-danger" href="{% url 'delete' c.id %}">X</td>
+                                    </tr>
+
+                                    {% endfor %}
                             <tr>
-                                <td>{{c.food_consumed.name}}</td>
-                                <td>{{c.food_consumed.carbs}}</td>
-                                <td>{{c.food_consumed.proteins}}</td>
-                                <td>{{c.food_consumed.fats}}</td>
-                                <td>{{c.food_consumed.calories}}</td>
-                                <td><a class="btn btn-danger" href="{% url 'delete' c.id %}">X</td>
+                                        <td id="name"><b>Total</b></td>
+                                        <td id="totalCarbs"><b></b></td>
+                                        <td id="totalProteins"><b></b></td>
+                                        <td id="totalFats"><b></b></td>
+                                        <td id="totalCalories"><b></b></td>
+
                             </tr>
 
-                            {% endfor %}
-                    <tr>
-                                <td id="name"><b>Total</b></td>
-                                <td id="totalCarbs"><b></b></td>
-                                <td id="totalProteins"><b></b></td>
-                                <td id="totalFats"><b></b></td>
-                                <td id="totalCalories"><b></b></td>
-
-                    </tr>
-
-                </table>
-            </div>
-            <div class="col-md-5" offset-1>
-                    <div class="">
-                        <h4>Today's breakdown</h4>
+                        </table>
                     </div>
+                    <div class="col-md-5" offset-1>
+                            <div class="">
+                                <h4>Today's breakdown</h4>
+                            </div>
 
-                    <div class="card-header text-white bg-primary">
-                        <h4>Macronutrients breakdown</h4>
-                    </div>
+                            <div class="card-header text-white bg-primary">
+                                <h4>Macronutrients breakdown</h4>
+                            </div>
 
-                    <div class="col-md-12">
-                        <canvas id="myChart" width="400" height="400"></canvas>
+                            <div class="col-md-12">
+                                <canvas id="myChart" width="400" height="400"></canvas>
+                            </div>
+
                     </div>
+                            <div class="col-md-5 offset-1">
+                                <div class="card-header text-white bg-primary">
+                                    <h4>Daily Nutrient Intake</h4>
+                                </div>
+                                <canvas id="barChart" width="400" height="400"></canvas>
+                            </div>
                 </div>
-        </div>
+	        </div>
+            <div class="container">
+
+                <h3>Your Daily Nutrition Progress</h3>
+
+                <canvas id="goalBarChart"></canvas>
+
+            </div>
+        </form>
+
     </body>
 <script>
-        var table = document.getElementById("table");
-        var carbs = 0, proteins=0, fats=0, calories=0;
-        for(var i=1; i<table.rows.length-1;i++){
-            console.log(table.rows[i].cells[1].innerHTML);
-            carbs += parseFloat(table.rows[i].cells[1].innerHTML);
-            carbs = Math.round(carbs);
-            proteins += parseFloat(table.rows[i].cells[2].innerHTML);
-            fats += parseFloat(table.rows[i].cells[3].innerHTML);
-            calories += parseFloat(table.rows[i].cells[4].innerHTML);
-        }
-        console.log(carbs);
-        document.getElementById("totalCarbs").innerHTML = '<b>' + carbs + '(gm)</b>';
-        document.getElementById("totalProteins").innerHTML = proteins;
-        document.getElementById("totalFats").innerHTML = fats;
-        document.getElementById("totalCalories").innerHTML = '<b>' + calories + '(kcal)</b>';
+        fetch('/chart-data/')
+                .then(response => response.json())
+                .then(data => {
+                    // Update progress bar
+                    var calPer = (data.calories / data.calorie_goal) * 100;
+                    document.getElementsByClassName("progress-bar")[0].setAttribute("style", "width:" + calPer + "%");
 
-        var calPer = (calories/2000)*100;
-        document.getElementsByClassName("progress-bar")[0].setAttribute("style", "width:"+calPer+"%");
-        var total = carbs + proteins +fats;
-        var carbsP= Math.round((carbs/total)*100);
-        var proteinsP= Math.round((proteins/total)*100);
-        var fatsP= Math.round((fats/total)*100);
+                    // Doughnut Chart (Goals vs Actual)
+                    var ctxDoughnut = document.getElementById('myChart').getContext('2d');
+                    new Chart(ctxDoughnut, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Carbs ' + Math.round((data.carbs/data.carb_goal)*100) + '% of Goal',
+                                     'Proteins ' + Math.round((data.proteins/data.protein_goal)*100) + '% of Goal',
+                                     'Fats ' + Math.round((data.fats/data.fat_goal)*100) + '% of Goal'],
+                            datasets: [{
+                                data: [data.carbs, data.proteins, data.fats],
+                                backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(255, 255, 100, 0.6)', 'rgba(255, 79, 12, 0.6)'],
+                                borderColor: ['rgba(255, 99, 132, 0.9)', 'rgba(255, 255, 100, 0.9)', 'rgba(255, 79, 12, 0.9)'],
+                                borderWidth: 1
+                            }]
+                        }
+                    });
 
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Carbs '+carbsP+'%', 'Proteins '+proteinsP+'%', 'Fats '+fatsP+'%'],
-                datasets: [{
-                    data: [carbsP, proteinsP, fatsP],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.6)',
-                        'rgba(255, 255, 100, 0.6)',
-                        'rgba(255, 79, 12, 0.6)',
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 0.9)',
-                        'rgba(255, 255, 100, 0.9)',
-                        'rgba(255, 79, 12, 0.9)',
-                    ],
-                    borderWidth: 1
-                }]
-            }
-        });
+                    // Bar Chart (Actual vs Goals)
+                    var ctxBar = document.getElementById('barChart').getContext('2d');
+                    new Chart(ctxBar, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Calories', 'Carbs', 'Proteins', 'Fats'],
+                            datasets: [
+                                {
+                                    label: 'Consumed',
+                                    data: [data.calories, data.carbs, data.proteins, data.fats],
+                                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                                },
+                                {
+                                    label: 'Goal',
+                                    data: [data.calorie_goal, data.carb_goal, data.protein_goal, data.fat_goal],
+                                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                                }
+                            ]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+
+                    // Update totals in table
+                    document.getElementById("totalCarbs").innerHTML = '<b>' + Math.round(data.carbs) + '(gm)</b>';
+                    document.getElementById("totalProteins").innerHTML = '<b>' + Math.round(data.proteins) + '(gm)</b>';
+                    document.getElementById("totalFats").innerHTML = '<b>' + Math.round(data.fats) + '(gm)</b>';
+                    document.getElementById("totalCalories").innerHTML = '<b>' + Math.round(data.calories) + '(kcal)</b>';
+
+                    // No need for reduce since data is already summed
+                    let totalCarbs = data.carbs;
+                    let totalProteins = data.proteins;
+                    let totalFats = data.fats;
+                    let totalCalories = data.calories;
+
+                    // Goal values (fix the key names to match your API)
+                    let goalCarbs = data.carb_goal;      // Not "goal_carbs"
+                    let goalProteins = data.protein_goal; // Not "goal_proteins"
+                    let goalFats = data.fat_goal;         // Not "goal_fats"
+                    let goalCalories = data.calorie_goal; // Not "goal_calories"
+
+                    // Create a bar chart for goal tracking
+                    new Chart(document.getElementById('goalBarChart'), {
+                        type: 'bar',
+                        data: {
+                            labels: ['Carbs', 'Proteins', 'Fats', 'Calories'],
+                            datasets: [
+                                {
+                                    label: 'Consumed',
+                                    data: [totalCarbs, totalProteins, totalFats, totalCalories],
+                                    backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                                },
+                                {
+                                    label: 'Goal',
+                                    data: [goalCarbs, goalProteins, goalFats, goalCalories],
+                                    backgroundColor: 'rgba(255, 99, 132, 0.6)'
+                                }
+                            ]
+                        },
+                        options: {
+                            scales: {
+                                y: { beginAtZero: true }
+                            }
+                        }
+                    });
+                });
+
     </script>
 </html>
