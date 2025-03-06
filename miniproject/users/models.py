@@ -2,8 +2,6 @@ import pdfkit
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.template.loader import render_to_string
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -16,9 +14,7 @@ class User(AbstractUser):
         ('customer', 'Customer'),
     ]
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='admin')
-    # profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
     class Meta:
-        # add this meta class to avoid clashes with the default User model
         swappable = 'AUTH_USER_MODEL'
 
     def __str__(self):
@@ -41,10 +37,8 @@ class Profile(models.Model):
 
     def save(self, *args, **kwargs):
         if self.profile_picture:
-            # Resize the image using Pillow
             from PIL import Image
             img = Image.open(self.profile_picture)
-            # img.thumbnail((300, 300), Image.ANTIALIAS)
             img.save(self.profile_picture.path)
         super().save(*args, **kwargs)
 

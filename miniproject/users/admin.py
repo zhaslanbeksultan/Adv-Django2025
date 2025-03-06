@@ -1,14 +1,14 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User  # Import your custom User model
+from .models import User
 
 
 class CustomUserAdmin(UserAdmin):
     model = User
-    list_display = ('username', 'email', 'role', 'is_staff', 'is_active')  # Customize columns
-    list_filter = ('role', 'is_staff', 'is_active')  # Add filters
-    search_fields = ('username', 'email')  # Enable search
-    ordering = ('email',)  # Default ordering
+    list_display = ('username', 'email', 'role', 'is_staff', 'is_active')
+    list_filter = ('role', 'is_staff', 'is_active')
+    search_fields = ('username', 'email')
+    ordering = ('email',)
 
     fieldsets = (
         (None, {'fields': ('username', 'password')}),

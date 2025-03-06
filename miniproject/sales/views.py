@@ -6,7 +6,6 @@ from django.shortcuts import render, redirect, reverse,\
 from trading.models import Order
 
 
-# create the Stripe instance
 stripe.api_key = settings.STRIPE_SECRET_KEY
 stripe.api_version = settings.STRIPE_API_VERSION
 
@@ -29,7 +28,7 @@ def payment_process(request):
             'cancel_url': cancel_url,
             'line_items': []
         }
-        # add order items to the Stripe checkout session
+
         for item in order.items.all():
             session_data['line_items'].append({
                 'price_data': {
@@ -42,7 +41,7 @@ def payment_process(request):
                 'quantity': item.quantity,
             })
 
-        # Stripe coupon
+
         if order.coupon:
             stripe_coupon = stripe.Coupon.create(
                                 name=order.coupon.code,
@@ -52,10 +51,9 @@ def payment_process(request):
                 'coupon': stripe_coupon.id
             }]
 
-        # create Stripe checkout session
+
         session = stripe.checkout.Session.create(**session_data)
 
-        # redirect to Stripe payment form
         return redirect(session.url, code=303)
 
     else:

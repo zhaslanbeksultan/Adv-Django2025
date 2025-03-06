@@ -33,7 +33,6 @@ class RegisterView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         user_data = serializer.data
-        # return redirect('login')
         return Response(user_data, status=status.HTTP_201_CREATED)
 
 class LoginAPIView(generics.GenericAPIView):
@@ -76,7 +75,6 @@ def profile_update(request):
 def profile_pdf(request):
     profile = request.user.profile
 
-    # Encode the profile picture as base64
     if profile.profile_picture:
         try:
             with open(profile.profile_picture.path, "rb") as image_file:
@@ -86,16 +84,13 @@ def profile_pdf(request):
     else:
         profile.profile_picture_base64 = None
 
-    # Render the HTML template
     html = render_to_string('users/profile_pdf.html', {'profile': profile})
 
-    # Generate PDF using WeasyPrint
     try:
         pdf = HTML(string=html).write_pdf()
     except Exception as e:
         raise
 
-    # Return PDF as a response
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="{profile.user.username}_profile.pdf"'
     return response

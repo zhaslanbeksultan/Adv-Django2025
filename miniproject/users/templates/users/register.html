@@ -10,25 +10,21 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
-        <!-- Email Field -->
         <div>
             <label for="email">Email:</label>
             <input type="email" name="email" id="email" required>
         </div>
 
-        <!-- Username Field -->
         <div>
             <label for="username">Username:</label>
             <input type="text" name="username" id="username" required>
         </div>
 
-        <!-- Password Field -->
         <div>
             <label for="password">Password:</label>
             <input type="password" name="password" id="password" required>
         </div>
 
-        <!-- Role Selection -->
         <div>
             <label for="role">Role:</label>
             <select name="role" id="role" required>
@@ -38,12 +34,6 @@
                 <option value="admin">Admin</option>
             </select>
         </div>
-
-        <!-- Image Upload -->
-{#        <div>#}
-{#            <label for="image">Profile Picture:</label>#}
-{#            <input type="file" name="image" id="image" accept="image/*" required>#}
-{#        </div>#}
 
         <button type="submit">Register</button>
     </form>

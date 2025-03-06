@@ -97,8 +97,6 @@ REDIS_DB = 1
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework.authentication.BasicAuthentication',  # For Basic Auth
-        # 'rest_framework.authentication.TokenAuthentication',   # For Token Auth
         'rest_framework_simplejwt.authentication.JWTAuthentication',  # For JWT Auth
     )
 }
@@ -114,10 +112,8 @@ SIMPLE_JWT = {
 }
 
 CART_SESSION_ID = 'cart'
-# Redirect after login
 LOGIN_REDIRECT_URL = 'products'
 
-# Redirect after logout
 LOGOUT_REDIRECT_URL = 'login'
 
 # Authentication backends (default)
@@ -130,7 +126,6 @@ PDFKIT_OPTIONS = {
     'encoding': 'UTF-8',
 }
 
-# Set the path for wkhtmltopdf
 PDFKIT_CONFIG = {
     'windows': r'E:\\wkhtmltox\\bin\\wkhtmltopdf.exe',  # For Windows
 }
@@ -175,12 +170,7 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = 'static/'
-# STATICFILES_DIRS = [BASE_DIR / 'static']
-# STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'staticfiles']
 STATIC_ROOT = BASE_DIR / 'static'
 # Default primary key field type
