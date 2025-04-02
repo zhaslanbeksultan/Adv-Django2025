@@ -1,3 +1,6 @@
-Django~=5.1.2
+django
 djangorestframework
 djangorestframework-simplejwt
+djongo
+psycopg2
+mysqlclient

@@ -75,9 +75,28 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'auth_db',
+        'USER': 'postgres',
+        'PASSWORD': '$PostgreSQL123!',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    },
+    'resume_db': {
+        'ENGINE': 'djongo',
+        'NAME': 'resume_db',
+        'CLIENT': {
+            'host': 'mongodb://localhost:27017/',
+        },
+    },
+    'logging_db': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'logging_db',
+        'USER': 'mysql_user',
+        'PASSWORD': '$F00tba11!',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    },
 }
 
 
@@ -121,3 +140,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DATABASE_ROUTERS = [
+    'auth_db.router',
+]
