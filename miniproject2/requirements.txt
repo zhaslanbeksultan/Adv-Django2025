@@ -1,6 +1,0 @@
-django
-djangorestframework
-djangorestframework-simplejwt
-djongo
-psycopg2
-mysqlclient
