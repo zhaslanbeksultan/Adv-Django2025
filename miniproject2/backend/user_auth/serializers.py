@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
-from user_auth.models import User, EmailVerificationToken
+from user_auth.models import User, EmailVerificationToken, PasswordResetToken
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -49,6 +49,23 @@ class EmailVerificationTokenSerializer(serializers.ModelSerializer):
             'created_at': {'read_only': True},  # Auto-set
             'expires_at': {'read_only': True}   # Auto-set
         }
+
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate_email(self, value):
+        if not User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("No user with this email exists.")
+        return value
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    token = serializers.UUIDField()
+    password = serializers.CharField(max_length=68, min_length=6, write_only=True)
+
+    def validate_token(self, value):
+        if not PasswordResetToken.objects.filter(token=value).exists():
+            raise serializers.ValidationError("Invalid or expired token.")
+        return value
 
 
 # Authentication Serializers

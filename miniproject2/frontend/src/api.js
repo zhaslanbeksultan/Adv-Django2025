@@ -23,7 +23,25 @@ export const verifyEmail = async (token) => {
 export const loginUser = async (credentials) => {
   try {
     const response = await axios.post(`${API_URL}login/`, credentials);
-    return response.data; // { email, username, tokens: { refresh, access } }
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const requestPasswordReset = async (email) => {
+  try {
+    const response = await axios.post(`${API_URL}password-reset/`, { email });
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const confirmPasswordReset = async (data) => {
+  try {
+    const response = await axios.post(`${API_URL}password-reset-confirm/`, data);
+    return response.data;
   } catch (error) {
     throw error.response.data;
   }

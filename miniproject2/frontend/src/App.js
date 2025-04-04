@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import RegisterForm from './components/RegisterForm';
 import VerifyEmail from './components/VerifyEmail';
 import Login from './components/Login';
+import PasswordResetRequest from './components/PasswordResetRequest';
+import PasswordResetConfirm from './components/PasswordResetConfirm';
 
 function App() {
   return (
@@ -12,6 +14,8 @@ function App() {
           <Route path="/" element={<RegisterForm />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/password-reset" element={<PasswordResetRequest />} />
+          <Route path="/password-reset-confirm" element={<PasswordResetConfirm />} />
         </Routes>
       </div>
     </Router>
