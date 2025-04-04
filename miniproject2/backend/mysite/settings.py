@@ -32,6 +32,7 @@ AUTH_USER_MODEL = "user_auth.User"
 # Application definition
 
 INSTALLED_APPS = [
+    'user_auth',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,11 +40,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'user_auth',
+    'jobs',
+    'resumes',
+    'analytics',
+    'ai',
+    'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -70,6 +76,10 @@ TEMPLATES = [
     },
 ]
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
+
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
 
@@ -85,22 +95,8 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '5432',
     },
-    'resume_db': {
-        'ENGINE': 'djongo',
-        'NAME': 'resume_db',
-        'CLIENT': {
-            'host': 'mongodb://localhost:27017/',
-        },
-    },
-    'logging_db': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'logging_db',
-        'USER': 'mysql_user',
-        'PASSWORD': '$F00tba11!',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    },
 }
+
 
 
 # Password validation
@@ -154,6 +150,12 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-DATABASE_ROUTERS = [
-    'user_auth.auth_router.AuthRouter',
-]
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'zhaslanbeksultan@gmail.com'
+# EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_PASSWORD = '263563'
+FRONTEND_URL = 'http://localhost:3000'
