@@ -5,6 +5,7 @@ import VerifyEmail from './components/VerifyEmail';
 import Login from './components/Login';
 import PasswordResetRequest from './components/PasswordResetRequest';
 import PasswordResetConfirm from './components/PasswordResetConfirm';
+import ResumeUpload from "./components/ResumeUpload";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/password-reset" element={<PasswordResetRequest />} />
           <Route path="/password-reset-confirm" element={<PasswordResetConfirm />} />
+          <Route path="/upload-resume" element={<ResumeUpload />} />
         </Routes>
       </div>
     </Router>

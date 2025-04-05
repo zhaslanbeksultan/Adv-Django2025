@@ -159,3 +159,11 @@ EMAIL_HOST_USER = 'zhaslanbeksultan@gmail.com'
 # EMAIL_HOST_PASSWORD = ''
 EMAIL_HOST_PASSWORD = '263563'
 FRONTEND_URL = 'http://localhost:3000'
+
+
+# Celery Configuration
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Explicit IPv4
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

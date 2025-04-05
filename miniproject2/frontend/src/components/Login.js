@@ -13,19 +13,18 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setMessage('');
-    setError('');
-    try {
-      const response = await loginUser(formData);
-      localStorage.setItem('tokens', JSON.stringify(response.tokens)); // Store tokens
-      setMessage('Login successful!');
-      // Optionally redirect: window.location.href = '/dashboard';
-    } catch (err) {
-      setError(err.detail || 'Login failed. Check your credentials.');
-    }
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setMessage('');
+  setError('');
+  try {
+    const response = await loginUser(formData);
+    localStorage.setItem('tokens', JSON.stringify(response.tokens)); // Store { refresh, access }
+    setMessage('Login successful!');
+  } catch (err) {
+    setError(err.detail || 'Login failed. Check your credentials.');
+  }
+};
 
   return (
     <div style={{ maxWidth: '400px', margin: '50px auto' }}>
