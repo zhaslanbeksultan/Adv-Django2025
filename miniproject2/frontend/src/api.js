@@ -28,6 +28,7 @@ export const verifyEmail = async (token) => {
 export const loginUser = async (credentials) => {
   try {
     const response = await axios.post(`${API_URL}auth/login/`, credentials);
+    localStorage.setItem('tokens', JSON.stringify(response.data));
     return response.data;
   } catch (error) {
     throw error.response.data;
@@ -53,12 +54,13 @@ export const confirmPasswordReset = async (data) => {
 };
 
 export const uploadResume = async (formData) => {
+  const headers = { ...getAuthHeaders(), 'Content-Type': 'multipart/form-data' };
+  console.log('Headers being sent:', headers);
   try {
-    const response = await axios.post(`${API_URL}resumes/upload/`, formData, {
-      headers: { ...getAuthHeaders(), 'Content-Type': 'multipart/form-data' },
-    });
+    const response = await axios.post(`${API_URL}resumes/upload/`, formData, { headers });
     return response.data;
   } catch (error) {
+    console.log('Error response:', error.response);
     throw error.response.data || error.message;
   }
 };

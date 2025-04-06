@@ -1,4 +1,5 @@
 from rest_framework.views import APIView
+from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework import permissions, status
 from resumes.models import Resume
@@ -68,7 +69,7 @@ class ResumeFeedbackView(APIView):
 
         return Response(feedback, status=status.HTTP_200_OK)
 
-class ResumeUploadView(APIView):
+class ResumeUploadView(CreateAPIView):
     serializer_class = ResumeSerializer
     permission_classes = [permissions.IsAuthenticated]
 
