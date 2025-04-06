@@ -8,6 +8,7 @@ import requests
 from resumes.tasks import process_resume
 import json
 from django.conf import settings
+import re
 
 class ResumeFeedbackView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -60,11 +61,19 @@ class ResumeFeedbackView(APIView):
                 }
             )
             response.raise_for_status()
-            feedback = response.json()['choices'][0]['message']['content']
-            feedback = json.loads(feedback)  # Parse JSON string from AI
+            raw_content = response.json()['choices'][0]['message']['content']
+            # Extract JSON from within ```json``` markers
+            json_match = re.search(r'```json\s*(.*?)\s*```', raw_content, re.DOTALL)
+            if json_match:
+                json_content = json_match.group(1)  # Get the content between the markers
+                feedback = json.loads(json_content)
+            else:
+                # Fallback: Try parsing directly if no markers are found
+                feedback = json.loads(raw_content)
         except requests.RequestException as e:
             return Response({"error": f"OpenRouter API failed: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        except json.JSONDecodeError:
+        except json.JSONDecodeError as e:
+            print("JSON parsing error:", str(e))
             return Response({"error": "Invalid JSON response from AI"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response(feedback, status=status.HTTP_200_OK)
