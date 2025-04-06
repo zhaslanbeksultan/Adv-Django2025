@@ -78,11 +78,29 @@ class ResumeFeedbackView(APIView):
 
         return Response(feedback, status=status.HTTP_200_OK)
 
-class ResumeUploadView(CreateAPIView):
-    serializer_class = ResumeSerializer
+class ResumeUploadView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def perform_create(self, serializer):
-        resume = serializer.save(user=self.request.user)
+    def post(self, request, *args, **kwargs):
+        file_obj = request.FILES.get('file')
+        title = request.data.get('title')
+
+        # Validate with Marshmallow
+        serializer = ResumeSerializer()
+        try:
+            validated_data = serializer.load({
+                'file': file_obj.name,
+                'title': title,
+            })
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Save to Django model
+        resume = Resume(user=request.user, file=file_obj, title=title)
+        resume.save()
+
         process_resume.delay(resume.id)
-        return Response({"message": "Resume uploaded successfully. Processing in progress."}, status=status.HTTP_201_CREATED)
+        return Response(
+            {"message": "Resume uploaded successfully. Processing in progress."},
+            status=status.HTTP_201_CREATED
+        )
