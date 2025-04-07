@@ -28,7 +28,9 @@ export const verifyEmail = async (token) => {
 export const loginUser = async (credentials) => {
   try {
     const response = await axios.post(`${API_URL}auth/login/`, credentials);
-    localStorage.setItem('tokens', JSON.stringify(response.data));
+    // Store tokens and user separately
+    localStorage.setItem('tokens', JSON.stringify(response.data.tokens));
+    localStorage.setItem('user', JSON.stringify({ username: response.data.username }));
     return response.data;
   } catch (error) {
     throw error.response.data;
@@ -62,5 +64,54 @@ export const uploadResume = async (formData) => {
   } catch (error) {
     console.log('Error response:', error.response);
     throw error.response.data || error.message;
+  }
+};
+
+export const getJobList = async () => {
+  try {
+    const response = await axios.get(`${API_URL}jobs/`);
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const createJob = async (jobData) => {
+  const headers = getAuthHeaders();
+  try {
+    const response = await axios.post(`${API_URL}jobs/create/`, jobData, { headers });
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const updateJob = async (jobId, jobData) => {
+  const headers = getAuthHeaders();
+  try {
+    const response = await axios.put(`${API_URL}jobs/${jobId}/update/`, jobData, { headers });
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const deleteJob = async (jobId) => {
+  const headers = getAuthHeaders();
+  try {
+    const response = await axios.delete(`${API_URL}jobs/${jobId}/delete/`, { headers });
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const getJobRecommendations = async () => {
+  const headers = getAuthHeaders();
+  try {
+    const response = await axios.get(`${API_URL}jobs/recommendations/`, { headers });
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
   }
 };

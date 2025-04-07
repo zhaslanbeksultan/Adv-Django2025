@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
-import { registerUser } from '../api'; // Ensure this points to your API function
+import { createJob } from '../api';
 
-const RegisterForm = () => {
+const JobCreate = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    username: '',
-    password: '',
-    role: 'job_seeker', // Default role
+    title: '',
+    company: '',
+    description: '',
+    location: '',
+    is_active: true,
   });
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: name === 'is_active' ? value === 'true' : value });
   };
 
   const handleSubmit = async (e) => {
@@ -20,67 +22,74 @@ const RegisterForm = () => {
     setMessage('');
     setError('');
     try {
-      const response = await registerUser(formData);
-      setMessage(`${response.message} Registered as ${response.role}.`);
+      const response = await createJob(formData);
+      setMessage('Job created successfully');
+      setFormData({ title: '', company: '', description: '', location: '', is_active: true });
     } catch (err) {
-      setError(err.error || 'Registration failed. Please try again.');
+      setError(err.error || 'Failed to create job');
     }
   };
 
   return (
     <div style={{ maxWidth: '400px', margin: '50px auto' }}>
-      <h2>Register</h2>
+      <h2>Create Job Listing</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            style={{ width: '100%', padding: '8px', margin: '5px 0' }}
-          />
-        </div>
-        <div>
-          <label>Username:</label>
+          <label>Title:</label>
           <input
             type="text"
-            name="username"
-            value={formData.username}
+            name="title"
+            value={formData.title}
             onChange={handleChange}
             required
             style={{ width: '100%', padding: '8px', margin: '5px 0' }}
           />
         </div>
         <div>
-          <label>Password:</label>
+          <label>Company:</label>
           <input
-            type="password"
-            name="password"
-            value={formData.password}
+            type="text"
+            name="company"
+            value={formData.company}
             onChange={handleChange}
             required
-            minLength="6"
             style={{ width: '100%', padding: '8px', margin: '5px 0' }}
           />
         </div>
         <div>
-          <label>Role:</label>
+          <label>Description:</label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            required
+            style={{ width: '100%', padding: '8px', margin: '5px 0', minHeight: '100px' }}
+          />
+        </div>
+        <div>
+          <label>Location:</label>
+          <input
+            type="text"
+            name="location"
+            value={formData.location}
+            onChange={handleChange}
+            style={{ width: '100%', padding: '8px', margin: '5px 0' }}
+          />
+        </div>
+        <div>
+          <label>Active:</label>
           <select
-            name="role"
-            value={formData.role}
+            name="is_active"
+            value={formData.is_active}
             onChange={handleChange}
             style={{ width: '100%', padding: '8px', margin: '5px 0' }}
           >
-            <option value="job_seeker">Job Seeker</option>
-            <option value="recruiter">Recruiter</option>
-            {/* Optionally exclude admin */}
-            {/* <option value="admin">Admin</option> */}
+            <option value="true">Yes</option>
+            <option value="false">No</option>
           </select>
         </div>
         <button type="submit" style={{ padding: '10px 20px', marginTop: '10px' }}>
-          Register
+          Create Job
         </button>
       </form>
       {message && <p style={{ color: 'green' }}>{message}</p>}
@@ -89,4 +98,4 @@ const RegisterForm = () => {
   );
 };
 
-export default RegisterForm;
+export default JobCreate;

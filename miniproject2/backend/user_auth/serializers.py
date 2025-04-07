@@ -71,26 +71,35 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 # Authentication Serializers
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=6, write_only=True)
+    role = serializers.ChoiceField(choices=User.ROLES, default='job_seeker')  # Allow role selection
+
     class Meta:
         model = User
-        fields = ['email', 'username', 'password']
+        fields = ['email', 'username', 'password', 'role']
+
     def validate(self, attrs):
         email = attrs.get('email', '')
         username = attrs.get('username', '')
+        role = attrs.get('role', 'job_seeker')
+
         if not username.isalnum():
-            raise serializers.ValidationError(
-                self.default_error_messages)
+            raise serializers.ValidationError({"username": "Username must be alphanumeric"})
+
+        # Optional: Restrict 'admin' role during registration
+        if role == 'admin':
+            raise serializers.ValidationError({"role": "Admin role cannot be selected during registration"})
+
         return attrs
 
     def create(self, validated_data):
         user = User.objects.create_user(
             email=validated_data['email'],
             username=validated_data['username'],
-            password=validated_data['password']
+            password=validated_data['password'],
+            role=validated_data['role'],  # Set the chosen role
+            is_verified=False,
+            is_active=False  # Inactive until verified
         )
-        user.role = 'job_seeker'  # Default role from your model
-        user.is_verified = False  # Default from your model
-        user.is_active = False  # Inactive until verified (for email verification)
         user.save()
         return user
 

@@ -1,3 +1,4 @@
+
 """
 URL configuration for mysite project.
 
@@ -17,9 +18,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from jobs.views import JobRecommendationsView, JobListView, JobCreateView, JobUpdateView, JobDeleteView
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('auth/', include('user_auth.urls')),
-    path('resumes/', include('resumes.urls')),
-    path('jobs/', include('jobs.urls')),
+    path('recommendations/', JobRecommendationsView.as_view(), name='job_recommendations'),
+    path('', JobListView.as_view(), name='job_list'),  # View all jobs
+    path('create/', JobCreateView.as_view(), name='job_create'),  # Create job
+    path('<int:job_id>/update/', JobUpdateView.as_view(), name='job_update'),  # Update job
+    path('<int:job_id>/delete/', JobDeleteView.as_view(), name='job_delete'),  # Delete job
 ]
+
+

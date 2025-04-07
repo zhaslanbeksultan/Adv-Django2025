@@ -15,6 +15,10 @@ class ResumeAdmin(admin.ModelAdmin):
     list_filter = ('processed', 'uploaded_at', 'user__role')
     search_fields = ('title', 'user__username')
     readonly_fields = ('uploaded_at', 'extracted_data', 'processed')
+    fieldsets = (
+        (None, {'fields': ('user', 'title', 'file')}),
+        ('Processing Info', {'fields': ('uploaded_at', 'processed', 'extracted_data')}),
+    )
 
     def file_link(self, obj):
         if obj.file:

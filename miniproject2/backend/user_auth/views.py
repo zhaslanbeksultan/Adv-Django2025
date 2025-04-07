@@ -14,11 +14,10 @@ from user_auth.serializers import RegisterSerializer, LoginSerializer, LogoutSer
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = RegisterSerializer  # Updated to your serializer
+    serializer_class = RegisterSerializer
 
     def perform_create(self, serializer):
-        user = serializer.save()  # Creates user with your RegisterSerializer
-        # No need to set is_active=False here; handled in serializer
+        user = serializer.save()
 
         # Create verification token
         token = EmailVerificationToken.objects.create(
@@ -41,9 +40,16 @@ class RegisterView(generics.CreateAPIView):
         except Exception as e:
             print(f"Email failed: {str(e)}")
             user.delete()  # Rollback if email fails
-            return Response({"error": "Failed to send email"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            raise  # Let the view handle the error
 
-        return Response({"message": "Registration successful. Please verify your email."}, status=status.HTTP_201_CREATED)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response({
+            "message": "Registration successful. Please verify your email.",
+            "role": serializer.validated_data['role']  # Include role in response
+        }, status=status.HTTP_201_CREATED)
 
 
 class VerifyEmailView(generics.GenericAPIView):
