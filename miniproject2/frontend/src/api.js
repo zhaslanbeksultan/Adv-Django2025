@@ -37,6 +37,21 @@ export const loginUser = async (credentials) => {
   }
 };
 
+export const logoutUser = async () => {
+  const tokens = JSON.parse(localStorage.getItem('tokens') || '{}');
+  const headers = getAuthHeaders();
+  try {
+    if (tokens.refresh) {
+      await axios.post(`${API_URL}auth/logout/`, { refresh: tokens.refresh }, { headers });
+    }
+  } catch (error) {
+    console.error('Logout failed:', error.response?.data || error.message);
+    // Continue with logout even if backend fails
+  }
+  localStorage.removeItem('tokens');
+  localStorage.removeItem('user');
+};
+
 export const requestPasswordReset = async (email) => {
   try {
     const response = await axios.post(`${API_URL}auth/password-reset/`, { email });
@@ -55,15 +70,26 @@ export const confirmPasswordReset = async (data) => {
   }
 };
 
+export const getResumeList = async () => {
+  const headers = getAuthHeaders();
+  try {
+    const response = await axios.get(`${API_URL}resumes/`, { headers });
+    return response.data;
+  } catch (error) {
+    throw error.response.data || { error: 'Failed to fetch resumes' };
+  }
+};
+
 export const uploadResume = async (formData) => {
-  const headers = { ...getAuthHeaders(), 'Content-Type': 'multipart/form-data' };
-  console.log('Headers being sent:', headers);
+  const headers = {
+    ...getAuthHeaders(),
+    'Content-Type': 'multipart/form-data', // Required for file uploads
+  };
   try {
     const response = await axios.post(`${API_URL}resumes/upload/`, formData, { headers });
     return response.data;
   } catch (error) {
-    console.log('Error response:', error.response);
-    throw error.response.data || error.message;
+    throw error.response.data || { error: 'Failed to upload resume' };
   }
 };
 

@@ -1,15 +1,18 @@
+// src/components/RegisterForm.jsx
 import React, { useState } from 'react';
-import { registerUser } from '../api'; // Ensure this points to your API function
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { registerUser } from '../api';
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
     email: '',
     username: '',
     password: '',
-    role: 'job_seeker', // Default role
+    role: 'job_seeker',
   });
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate(); // Hook for navigation
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,6 +28,10 @@ const RegisterForm = () => {
     } catch (err) {
       setError(err.error || 'Registration failed. Please try again.');
     }
+  };
+
+  const handleLoginRedirect = () => {
+    navigate('/login'); // Redirect to login page
   };
 
   return (
@@ -75,14 +82,18 @@ const RegisterForm = () => {
           >
             <option value="job_seeker">Job Seeker</option>
             <option value="recruiter">Recruiter</option>
-            {/* Optionally exclude admin */}
-            {/* <option value="admin">Admin</option> */}
           </select>
         </div>
         <button type="submit" style={{ padding: '10px 20px', marginTop: '10px' }}>
           Register
         </button>
       </form>
+      <button
+        onClick={handleLoginRedirect}
+        style={{ padding: '10px 20px', marginTop: '10px', backgroundColor: '#f0f0f0' }}
+      >
+        Login
+      </button>
       {message && <p style={{ color: 'green' }}>{message}</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>

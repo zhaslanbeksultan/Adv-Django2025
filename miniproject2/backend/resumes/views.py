@@ -78,29 +78,23 @@ class ResumeFeedbackView(APIView):
 
         return Response(feedback, status=status.HTTP_200_OK)
 
+
+class ResumeListView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        resumes = Resume.objects.filter(user=request.user).order_by('-uploaded_at')
+        serializer = ResumeSerializer(resumes, many=True)
+        return Response({"resumes": serializer.data}, status=status.HTTP_200_OK)
+
+
 class ResumeUploadView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, *args, **kwargs):
-        file_obj = request.FILES.get('file')
-        title = request.data.get('title')
-
-        # Validate with Marshmallow
-        serializer = ResumeSerializer()
-        try:
-            validated_data = serializer.load({
-                'file': file_obj.name,
-                'title': title,
-            })
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Save to Django model
-        resume = Resume(user=request.user, file=file_obj, title=title)
-        resume.save()
-
-        process_resume.delay(resume.id)
-        return Response(
-            {"message": "Resume uploaded successfully. Processing in progress."},
-            status=status.HTTP_201_CREATED
-        )
+    def post(self, request):
+        serializer = ResumeSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            # Save the instance with the authenticated user
+            resume = serializer.save(user=request.user)
+            return Response(ResumeSerializer(resume).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

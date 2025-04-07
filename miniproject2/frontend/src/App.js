@@ -11,6 +11,7 @@ import JobList from './components/JobList';
 import JobCreate from './components/JobCreate';
 import JobManage from './components/JobManage';
 import JobRecommendations from './components/JobRecommendations';
+import MyResume from "./components/MyResume";
 
 function App() {
   return (
@@ -27,7 +28,8 @@ function App() {
           <Route path="/jobs" element={<JobList />} />
           <Route path="/jobs/create" element={<JobCreate />} />
           <Route path="/jobs/manage" element={<JobManage />} />
-          <Route path="/job-recommendations" element={<JobRecommendations />} />
+          <Route path="/jobs/recommendations" element={<JobRecommendations />} />
+          <Route path="/my-resume" element={<MyResume />} />
         </Routes>
       </div>
     </Router>

@@ -1,53 +1,64 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { uploadResume } from '../api';
 
 const ResumeUpload = () => {
-  const [file, setFile] = useState(null);
-  const [title, setTitle] = useState('');
+  const [formData, setFormData] = useState({
+    title: '',
+    file: null,
+  });
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === 'file') {
+      setFormData({ ...formData, file: files[0] }); // Handle file input
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
     setError('');
-    if (!file) {
-      setError('Please select a file.');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('title', title);
+    const data = new FormData();
+    data.append('file', formData.file); // Required field
+    if (formData.title) data.append('title', formData.title); // Optional field
 
     try {
-      const response = await uploadResume(formData);
-      setMessage(response.message);
+      await uploadResume(data);
+      setMessage('Resume uploaded successfully');
+      setTimeout(() => navigate('/my-resume'), 1000); // Redirect after success
     } catch (err) {
-      setError(err.message || 'Upload failed.');
+      setError(err.error || 'Failed to upload resume');
     }
   };
 
   return (
     <div style={{ maxWidth: '400px', margin: '50px auto' }}>
       <h2>Upload Resume</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
         <div>
           <label>Title (optional):</label>
           <input
             type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
             style={{ width: '100%', padding: '8px', margin: '5px 0' }}
           />
         </div>
         <div>
-          <label>Resume (PDF/DOCX):</label>
+          <label>File:</label>
           <input
             type="file"
-            accept=".pdf,.docx"
-            onChange={(e) => setFile(e.target.files[0])}
-            style={{ margin: '5px 0' }}
+            name="file"
+            onChange={handleChange}
+            required
+            style={{ width: '100%', padding: '8px', margin: '5px 0' }}
           />
         </div>
         <button type="submit" style={{ padding: '10px 20px', marginTop: '10px' }}>
