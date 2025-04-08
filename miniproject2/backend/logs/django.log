@@ -772,3 +772,83 @@ INFO 2025-04-08 23:22:50,760 autoreload Watching for file changes with StatReloa
 INFO 2025-04-08 23:22:50,760 autoreload Watching for file changes with StatReloader
 INFO 2025-04-08 23:22:53,942 basehttp "POST /auth/login/ HTTP/1.1" 200 514
 INFO 2025-04-08 23:22:53,942 basehttp "POST /auth/login/ HTTP/1.1" 200 514
+INFO 2025-04-08 23:22:55,745 basehttp "GET /jobs/ HTTP/1.1" 200 1620
+INFO 2025-04-08 23:22:55,745 basehttp "GET /jobs/ HTTP/1.1" 200 1620
+INFO 2025-04-08 23:22:55,755 basehttp "GET /jobs/ HTTP/1.1" 200 1620
+INFO 2025-04-08 23:22:55,755 basehttp "GET /jobs/ HTTP/1.1" 200 1620
+INFO 2025-04-08 23:24:23,374 autoreload E:\AdvancedDjango\Adv-Django2025\miniproject2\backend\mysite\settings.py changed, reloading.
+INFO 2025-04-08 23:24:23,374 autoreload E:\AdvancedDjango\Adv-Django2025\miniproject2\backend\mysite\settings.py changed, reloading.
+INFO 2025-04-08 23:24:24,554 autoreload Watching for file changes with StatReloader
+INFO 2025-04-08 23:24:24,554 autoreload Watching for file changes with StatReloader
+INFO 2025-04-08 23:25:23,456 autoreload E:\AdvancedDjango\Adv-Django2025\miniproject2\backend\jobs\views.py changed, reloading.
+INFO 2025-04-08 23:25:23,456 autoreload E:\AdvancedDjango\Adv-Django2025\miniproject2\backend\jobs\views.py changed, reloading.
+INFO 2025-04-08 23:25:24,690 autoreload Watching for file changes with StatReloader
+INFO 2025-04-08 23:25:24,690 autoreload Watching for file changes with StatReloader
+INFO 2025-04-08 23:25:29,066 autoreload E:\AdvancedDjango\Adv-Django2025\miniproject2\backend\jobs\views.py changed, reloading.
+INFO 2025-04-08 23:25:29,066 autoreload E:\AdvancedDjango\Adv-Django2025\miniproject2\backend\jobs\views.py changed, reloading.
+INFO 2025-04-08 23:25:31,688 autoreload Watching for file changes with StatReloader
+INFO 2025-04-08 23:25:31,688 autoreload Watching for file changes with StatReloader
+WARNING 2025-04-08 23:27:01,180 log Forbidden: /auth/logout/
+WARNING 2025-04-08 23:27:01,180 log Forbidden: /auth/logout/
+WARNING 2025-04-08 23:27:01,183 basehttp "POST /auth/logout/ HTTP/1.1" 403 58
+WARNING 2025-04-08 23:27:01,183 basehttp "POST /auth/logout/ HTTP/1.1" 403 58
+INFO 2025-04-08 23:27:08,123 basehttp "POST /auth/login/ HTTP/1.1" 200 514
+INFO 2025-04-08 23:27:08,123 basehttp "POST /auth/login/ HTTP/1.1" 200 514
+INFO 2025-04-08 23:27:09,347 basehttp "GET /jobs/ HTTP/1.1" 200 1620
+INFO 2025-04-08 23:27:09,347 basehttp "GET /jobs/ HTTP/1.1" 200 1620
+INFO 2025-04-08 23:27:09,347 basehttp "GET /jobs/ HTTP/1.1" 200 1620
+INFO 2025-04-08 23:27:09,347 basehttp "GET /jobs/ HTTP/1.1" 200 1620
+INFO 2025-04-08 23:27:22,263 basehttp "OPTIONS /resumes/ HTTP/1.1" 200 0
+INFO 2025-04-08 23:27:22,263 basehttp "OPTIONS /resumes/ HTTP/1.1" 200 0
+WARNING 2025-04-08 23:27:22,265 log Forbidden: /resumes/
+WARNING 2025-04-08 23:27:22,265 log Forbidden: /resumes/
+WARNING 2025-04-08 23:27:22,265 basehttp "GET /resumes/ HTTP/1.1" 403 58
+WARNING 2025-04-08 23:27:22,265 basehttp "GET /resumes/ HTTP/1.1" 403 58
+WARNING 2025-04-08 23:27:22,273 log Forbidden: /resumes/
+WARNING 2025-04-08 23:27:22,273 log Forbidden: /resumes/
+WARNING 2025-04-08 23:27:22,273 basehttp "GET /resumes/ HTTP/1.1" 403 58
+WARNING 2025-04-08 23:27:22,273 basehttp "GET /resumes/ HTTP/1.1" 403 58
+WARNING 2025-04-08 23:27:35,459 log Forbidden: /resumes/
+WARNING 2025-04-08 23:27:35,459 log Forbidden: /resumes/
+WARNING 2025-04-08 23:27:35,459 log Forbidden: /resumes/
+WARNING 2025-04-08 23:27:35,459 log Forbidden: /resumes/
+WARNING 2025-04-08 23:27:35,459 basehttp "GET /resumes/ HTTP/1.1" 403 58
+WARNING 2025-04-08 23:27:35,459 basehttp "GET /resumes/ HTTP/1.1" 403 58
+WARNING 2025-04-08 23:27:35,459 basehttp "GET /resumes/ HTTP/1.1" 403 58
+WARNING 2025-04-08 23:27:35,459 basehttp "GET /resumes/ HTTP/1.1" 403 58
+INFO 2025-04-08 23:29:17,599 autoreload Watching for file changes with StatReloader
+INFO 2025-04-08 23:29:17,599 autoreload Watching for file changes with StatReloader
+WARNING 2025-04-08 23:29:27,170 log Forbidden: /auth/logout/
+WARNING 2025-04-08 23:29:27,170 log Forbidden: /auth/logout/
+WARNING 2025-04-08 23:29:27,170 basehttp "POST /auth/logout/ HTTP/1.1" 403 58
+WARNING 2025-04-08 23:29:27,170 basehttp "POST /auth/logout/ HTTP/1.1" 403 58
+INFO 2025-04-08 23:29:33,869 basehttp "POST /auth/login/ HTTP/1.1" 200 514
+INFO 2025-04-08 23:29:33,869 basehttp "POST /auth/login/ HTTP/1.1" 200 514
+INFO 2025-04-08 23:29:34,977 basehttp - Broken pipe from ('127.0.0.1', 49540)
+INFO 2025-04-08 23:29:34,977 basehttp - Broken pipe from ('127.0.0.1', 49540)
+WARNING 2025-04-08 23:29:46,534 log Forbidden: /auth/logout/
+WARNING 2025-04-08 23:29:46,534 log Forbidden: /auth/logout/
+WARNING 2025-04-08 23:29:46,534 basehttp "POST /auth/logout/ HTTP/1.1" 403 58
+WARNING 2025-04-08 23:29:46,534 basehttp "POST /auth/logout/ HTTP/1.1" 403 58
+WARNING 2025-04-08 23:29:52,773 log Forbidden: /auth/login/
+WARNING 2025-04-08 23:29:52,773 log Forbidden: /auth/login/
+WARNING 2025-04-08 23:29:52,773 basehttp "POST /auth/login/ HTTP/1.1" 403 43
+WARNING 2025-04-08 23:29:52,773 basehttp "POST /auth/login/ HTTP/1.1" 403 43
+INFO 2025-04-08 23:30:18,299 basehttp "POST /auth/login/ HTTP/1.1" 200 517
+INFO 2025-04-08 23:30:18,299 basehttp "POST /auth/login/ HTTP/1.1" 200 517
+INFO 2025-04-08 23:32:54,737 autoreload Watching for file changes with StatReloader
+INFO 2025-04-08 23:32:54,737 autoreload Watching for file changes with StatReloader
+INFO 2025-04-08 23:33:58,402 autoreload E:\AdvancedDjango\Adv-Django2025\miniproject2\backend\jobs\views.py changed, reloading.
+INFO 2025-04-08 23:33:58,402 autoreload E:\AdvancedDjango\Adv-Django2025\miniproject2\backend\jobs\views.py changed, reloading.
+INFO 2025-04-08 23:34:00,122 autoreload Watching for file changes with StatReloader
+INFO 2025-04-08 23:34:00,122 autoreload Watching for file changes with StatReloader
+INFO 2025-04-08 23:34:13,822 autoreload Watching for file changes with StatReloader
+INFO 2025-04-08 23:34:13,822 autoreload Watching for file changes with StatReloader
+WARNING 2025-04-08 23:34:32,238 log Forbidden: /auth/logout/
+WARNING 2025-04-08 23:34:32,238 log Forbidden: /auth/logout/
+WARNING 2025-04-08 23:34:32,242 basehttp "POST /auth/logout/ HTTP/1.1" 403 58
+WARNING 2025-04-08 23:34:32,242 basehttp "POST /auth/logout/ HTTP/1.1" 403 58
+INFO 2025-04-08 23:34:46,992 basehttp "POST /auth/login/ HTTP/1.1" 200 514
+INFO 2025-04-08 23:34:46,992 basehttp "POST /auth/login/ HTTP/1.1" 200 514
+INFO 2025-04-08 23:34:48,144 basehttp - Broken pipe from ('127.0.0.1', 49855)
+INFO 2025-04-08 23:34:48,144 basehttp - Broken pipe from ('127.0.0.1', 49855)

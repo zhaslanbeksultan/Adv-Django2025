@@ -1,4 +1,6 @@
 # resumes/views.py
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions, status
@@ -7,6 +9,8 @@ from jobs.models import JobListing
 from jobs.serializers import JobListingSerializer
 from resumes.models import Resume
 import os
+import logging
+logger = logging.getLogger(__name__)
 
 # Load skills from skills.txt (same as tasks.py)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -78,10 +82,13 @@ class JobRecommendationsView(APIView):
             "recommendations": recommended_jobs
         }, status=status.HTTP_200_OK)
 
+
+@method_decorator(cache_page(60 * 15), name='dispatch')  # Cache for 15 min
 class JobListView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request):
+        logger.info("View logic executed — this should appear only once if cache works.")
         jobs = JobListing.objects.filter(is_active=True)
         serializer = JobListingSerializer(jobs, many=True)
         return Response({"jobs": serializer.data}, status=status.HTTP_200_OK)
