@@ -31,7 +31,7 @@ const MyResume = () => {
   };
 
   const handleResumeFeedback = () => {
-    navigate('/resumes/resume-feedback');
+    navigate('/resume-feedback');
   };
 
   return (

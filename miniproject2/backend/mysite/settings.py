@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import datetime
 from pathlib import Path
 
+from decouple import config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%9nrqdye1^@704tb6^@3-ej7*dud08f70eri=msra#q65ib+mk'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -91,7 +93,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'auth_db',
         'USER': 'postgres',
-        'PASSWORD': '$PostgreSQL123!',
+        'PASSWORD': config('DB_PASSWORD'),
         'HOST': 'localhost',
         'PORT': '5432',
     },
@@ -156,8 +158,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'zhaslanbeksultan@gmail.com'
-# EMAIL_HOST_PASSWORD = ''
-EMAIL_HOST_PASSWORD = '263563'
+EMAIL_HOST_PASSWORD = ''
 FRONTEND_URL = 'http://localhost:3000'
 
 
@@ -168,4 +169,4 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
-OPENROUTER_API_KEY = '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'
+OPENROUTER_API_KEY = config('OPENROUTER_API_KEY')

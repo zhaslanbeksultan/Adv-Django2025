@@ -4,7 +4,7 @@ import spacy
 import pymupdf4llm
 from docx import Document
 from celery import shared_task
-from .models import Resume
+from resumes.models import Resume
 
 nlp = spacy.load('en_core_web_sm')
 

@@ -96,5 +96,6 @@ class ResumeUploadView(APIView):
         if serializer.is_valid():
             # Save the instance with the authenticated user
             resume = serializer.save(user=request.user)
+            process_resume.delay(resume.id)
             return Response(ResumeSerializer(resume).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
