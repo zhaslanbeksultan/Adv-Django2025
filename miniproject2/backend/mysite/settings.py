@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 
 from decouple import config
+from rest_framework.throttling import UserRateThrottle
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -160,11 +161,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
-}
+
+
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME':    datetime.timedelta(minutes=1),
@@ -211,3 +209,19 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
 OPENROUTER_API_KEY = config('OPENROUTER_API_KEY')
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.UserRateThrottle',
+        'rest_framework.throttling.AnonRateThrottle',
+        # 'rest_framework.throttling.ScopedRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        # 'login': '5/min',
+        'user': '100/day',  # Authenticated users
+        'anon': '10/hour',  # Unauthenticated users
+    }
+}

@@ -4,6 +4,7 @@ from django.core.mail import send_mail
 from django.utils import timezone
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
+from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.views import APIView
 
 from mysite import settings
@@ -93,6 +94,8 @@ class VerifyEmailView(generics.GenericAPIView):
 
 
 class LoginAPIView(generics.GenericAPIView):
+    # throttle_classes = [ScopedRateThrottle]
+    # throttle_scope = 'login'
     serializer_class = LoginSerializer
     def post(self,request):
         serializer = self.serializer_class(data=request.data)
