@@ -10,6 +10,9 @@ from mysite import settings
 from user_auth.models import EmailVerificationToken, User, PasswordResetToken
 from user_auth.serializers import RegisterSerializer, LoginSerializer, LogoutSerializer, UserSerializer, \
     PasswordResetConfirmSerializer, PasswordResetSerializer
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class RegisterView(generics.CreateAPIView):
@@ -25,6 +28,7 @@ class RegisterView(generics.CreateAPIView):
             expires_at=timezone.now() + timedelta(hours=24)
         )
         print(f"Generated token: {token.token}")
+        logger.debug(f"Generated verification token for {user.email}: {token.token}")
 
         # Send email
         verification_link = f"{settings.FRONTEND_URL}/verify-email?token={token.token}"
@@ -37,8 +41,10 @@ class RegisterView(generics.CreateAPIView):
                 fail_silently=False,
             )
             print("Email sent successfully")
+            logger.info(f"Verification email sent to {user.email}")
         except Exception as e:
             print(f"Email failed: {str(e)}")
+            logger.error(f"Failed to send verification email to {user.email}: {str(e)}")
             user.delete()  # Rollback if email fails
             raise  # Let the view handle the error
 
@@ -63,11 +69,13 @@ class VerifyEmailView(generics.GenericAPIView):
         try:
             verification_token = self.get_queryset().get(token=token)
             if verification_token.expires_at < timezone.now():
+                logger.warning(f"Expired verification token used: {token}")
                 verification_token.delete()
                 return Response({"error": "Token has expired"}, status=status.HTTP_400_BAD_REQUEST)
 
             user = verification_token.user
             if user.is_verified:
+                logger.info(f"Email verified for user: {user.email}")
                 return Response({"message": "Email already verified"}, status=status.HTTP_200_OK)
 
             user.is_verified = True
@@ -77,8 +85,6 @@ class VerifyEmailView(generics.GenericAPIView):
 
             return Response({"message": "Email verified successfully"}, status=status.HTTP_200_OK)
 
-        except EmailVerificationToken.DoesNotExist:
-            return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 
         except EmailVerificationToken.DoesNotExist:
             return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
@@ -90,7 +96,11 @@ class LoginAPIView(generics.GenericAPIView):
     serializer_class = LoginSerializer
     def post(self,request):
         serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        # serializer.is_valid(raise_exception=True)
+        if not serializer.is_valid():
+            logger.warning(f"Login failed. Errors: {serializer.errors}")
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        logger.info(f"User logged in: {serializer.validated_data['email']}")
         return Response(serializer.data,status=status.HTTP_200_OK)
 
 class LogoutAPIView(generics.GenericAPIView):
@@ -101,6 +111,7 @@ class LogoutAPIView(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        logger.info(f"User logged out: {request.user.email}")
         return Response({"message": "Logout successful"}, status=status.HTTP_204_NO_CONTENT)
 
 
@@ -114,12 +125,15 @@ class PasswordResetView(generics.GenericAPIView):
         email = serializer.validated_data['email']
         user = User.objects.get(email=email)
 
+        logger.info(f"Password reset requested for {user.email}")
+
         # Create reset token
         token = PasswordResetToken.objects.create(
             user=user,
             expires_at=timezone.now() + timedelta(hours=1)  # 1-hour expiration
         )
         print(f"Reset token: {token.token}")  # Debug
+        logger.debug(f"Password reset token: {token.token}")
 
         # Send email
         reset_link = f"{settings.FRONTEND_URL}/password-reset-confirm?token={token.token}"
@@ -135,6 +149,7 @@ class PasswordResetView(generics.GenericAPIView):
         except Exception as e:
             print(f"Email failed: {str(e)}")
             token.delete()
+            logger.error(f"Failed to send reset email to {user.email}: {str(e)}")
             return Response({"error": "Failed to send email"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response({"message": "Password reset link sent to your email."}, status=status.HTTP_200_OK)
@@ -159,6 +174,8 @@ class PasswordResetConfirmView(generics.GenericAPIView):
             user.save()
             reset_token.delete()  # One-time use
 
+            logger.info(f"Password reset confirmed for {user.email}")
             return Response({"message": "Password reset successfully"}, status=status.HTTP_200_OK)
         except PasswordResetToken.DoesNotExist:
+            logger.warning(f"Invalid password reset token: {token}")
             return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
