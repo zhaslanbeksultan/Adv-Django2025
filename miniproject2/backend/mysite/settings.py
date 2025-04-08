@@ -44,10 +44,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'jobs',
     'resumes',
-    'analytics',
-    'ai',
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
