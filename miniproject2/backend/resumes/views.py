@@ -11,11 +11,12 @@ from django.conf import settings
 import re
 
 class ResumeFeedbackView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         # Get the latest processed resume
-        resume = Resume.objects.filter(user=request.user, processed=True).last()
+        # resume = Resume.objects.filter(user=request.user, processed=True).last()
+        resume = Resume.objects.last()
         if not resume:
             return Response({"error": "No processed resume found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -80,10 +81,11 @@ class ResumeFeedbackView(APIView):
 
 
 class ResumeListView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        resumes = Resume.objects.filter(user=request.user).order_by('-uploaded_at')
+        # resumes = Resume.objects.filter(user=request.user).order_by('-uploaded_at')
+        resumes = Resume.objects.all().order_by('-uploaded_at')
         serializer = ResumeSerializer(resumes, many=True)
         return Response({"resumes": serializer.data}, status=status.HTTP_200_OK)
 

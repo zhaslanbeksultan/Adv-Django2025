@@ -12,7 +12,8 @@ class JobListing(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='job_listings',
-        limit_choices_to={'role': 'recruiter'}  # Restrict to recruiters in admin/forms
+        default=18,
+        # limit_choices_to={'role': 'recruiter'}  # Restrict to recruiters in admin/forms
     )
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)

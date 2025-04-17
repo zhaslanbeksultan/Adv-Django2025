@@ -54,7 +54,7 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
-        'myapp': {  # Replace with your actual app name
+        'mysite': {  # Replace with your actual app name
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
         },

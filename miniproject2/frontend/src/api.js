@@ -4,6 +4,7 @@ const API_URL = 'http://localhost:8000/';
 
 const getAuthHeaders = () => {
   const tokens = JSON.parse(localStorage.getItem('tokens') || '{}');
+  console.log('Tokens:', tokens);
   return { Authorization: `Bearer ${tokens.access}` };
 };
 
@@ -28,6 +29,7 @@ export const verifyEmail = async (token) => {
 export const loginUser = async (credentials) => {
   try {
     const response = await axios.post(`${API_URL}auth/login/`, credentials);
+    console.log('Login response:', response.data);
     // Store tokens and user separately
     localStorage.setItem('tokens', JSON.stringify(response.data.tokens));
     localStorage.setItem('user', JSON.stringify({ username: response.data.username }));
@@ -72,10 +74,12 @@ export const confirmPasswordReset = async (data) => {
 
 export const getResumeList = async () => {
   const headers = getAuthHeaders();
+  console.log('Headers for getResumeList:', headers);
   try {
     const response = await axios.get(`${API_URL}resumes/`, { headers });
     return response.data;
   } catch (error) {
+    console.error('getResumeList error:', error.response?.data);
     throw error.response.data || { error: 'Failed to fetch resumes' };
   }
 };
@@ -85,10 +89,12 @@ export const uploadResume = async (formData) => {
     ...getAuthHeaders(),
     'Content-Type': 'multipart/form-data', // Required for file uploads
   };
+  console.log('Headers for uploadResume:', headers);
   try {
     const response = await axios.post(`${API_URL}resumes/upload/`, formData, { headers });
     return response.data;
   } catch (error) {
+    console.error('uploadResume error:', error.response?.data);
     throw error.response.data || { error: 'Failed to upload resume' };
   }
 };
